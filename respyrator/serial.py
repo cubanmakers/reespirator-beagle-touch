@@ -102,6 +102,9 @@ class FakeSerial:
     def in_waiting(self):
         return self._waiting
 
+    def is_open(self):
+        return True
+
     def read(self, size):
         pass
 
@@ -126,6 +129,9 @@ class FileSerial(Serial):
                 'File "%s" with samples frames not exists' % file_name)
         self.file_name = file_name
 
+    def is_open(self):
+        return True
+
     def open(self):
         with open(self.file_name, 'r') as fp:
             self._lines = fp.read().split('\n')
@@ -146,4 +152,7 @@ class FileSerial(Serial):
         return self.read()
 
     def write(self, byte):
+        pass
+
+    def flush(self):
         pass

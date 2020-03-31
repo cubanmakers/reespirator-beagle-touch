@@ -6,13 +6,12 @@ from parse import *
 from PyQt5 import QtWidgets, uic, QtCore
 from pyqtgraph import PlotWidget, plot
 from respyrator import core, serial
-import functools
 import numpy as np
 import pyqtgraph as pg
 import sys
 
 pg.setConfigOption('background', "052049")
-# pg.setConfigOption('leftButtonPan', False)
+pg.setConfigOption('leftButtonPan', False)
 
 
 class MainWindow(QtWidgets.QDialog):
@@ -37,9 +36,7 @@ class MainWindow(QtWidgets.QDialog):
 
         self.serial_setup()
         uic.loadUi(core.path('ui_main.ui'), self)
-        pg.setConfigOption('background', (230, 230, 230))
-        self.update_values()
-
+        # pg.setConfigOption('background', (230, 230, 230))
         self.buttonUpPip.clicked.connect(self.buttonUpPipClicked)
         self.buttonDownPip.clicked.connect(self.buttonDownPipClicked)
         self.buttonUpPeep.clicked.connect(self.buttonUpPeepClicked)
@@ -47,10 +44,8 @@ class MainWindow(QtWidgets.QDialog):
         self.buttonUpFR.clicked.connect(self.buttonUpFRClicked)
         self.buttonDownFR.clicked.connect(self.buttonDownFRClicked)
         self.buttonRecruit.clicked.connect(self.buttonRecruitClicked)
-
         self._recruit_on_stylesheet = "background-color: red"
         self._recruit_off_stylesheet = self.buttonRecruit.styleSheet()
-
         self.timer = pg.QtCore.QTimer()
         self.timer.timeout.connect(self.serial_read)
 
@@ -67,6 +62,8 @@ class MainWindow(QtWidgets.QDialog):
         #self.myCurve[2].setPen(pg.mkPen('y', width=3))
         self.pointer = 0
         self.firstCycle = 1
+
+        self.update()
 
     def show(self, *args, **kwargs):
         res = super().show()
@@ -115,14 +112,14 @@ class MainWindow(QtWidgets.QDialog):
             self._pip = int(data[1])
             self._peep = int(data[2])
             self._fr = int(data[3])
-            self.update_values()
+            self.update()
         # frame: DT pres1 pres2 vol flow
         elif data[0] == 'DT':
             self._pres1 = data[1]
             self._pres2 = data[2]
             self._vol = data[3]
             self._flow = data[4]
-            self.update(data[1], data[2])
+            self.update()
         # frame: VOL vol
         elif data[0] == 'VOL':
             self._vol = [1]
@@ -139,7 +136,17 @@ class MainWindow(QtWidgets.QDialog):
         widget.disableAutoRange()
         widget.showGrid(True, True, 1)
 
-    def update(self, pres, flow):
+    def update(self):
+        self.configPip.setText(str(self._config_pip))
+        self.configPeep.setText(str(self._config_peep))
+        self.configFr.setText(str(self._config_fr))
+        self.textPip.setText(str(self._pip))
+        self.textPeep.setText(str(self._peep))
+        self.textFr.setText(str(self._fr))
+        self.textVol.setText(str(self._vol))
+        pres = self._pres1
+        flow = self._pres2
+        flow = self._fr
         self.i = self.pointer % (self.chunkSize)
         if self.i == 0 and self.firstCycle == 0:
             tmp = np.empty((self.chunkSize, 3))
@@ -161,16 +168,6 @@ class MainWindow(QtWidgets.QDialog):
         self.pointer += 1
         if self.pointer >= self.chunkSize:
             self.firstCycle = 0
-
-    def update_values(self):
-        self.configPip.setText(str(self._config_pip))
-        self.configPeep.setText(str(self._config_peep))
-        self.configFr.setText(str(self._config_fr))
-
-        self.textPip.setText(str(self._pip))
-        self.textPeep.setText(str(self._peep))
-        self.textFr.setText(str(self._fr))
-        self.textVol.setText(str(self._vol))
 
     def kill_recruit_timmer(self):
         if not self._recruit_timmer:
