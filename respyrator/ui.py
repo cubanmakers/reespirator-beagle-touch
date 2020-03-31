@@ -107,7 +107,7 @@ class MainWindow(QtWidgets.QDialog):
         # frame: DT pres1 pres2 vol flow
         elif data[0] == 'DT':
             self._pres1 = int(data[1])
-            self._pres2 = int(data[2])
+            self._pres2 = int(data[3])
             # self._vol = int(data[3])
             self._flow = int(data[4])
             self.update()
@@ -136,8 +136,7 @@ class MainWindow(QtWidgets.QDialog):
         self.textFr.setText(str(self._fr))
         self.textVol.setText(str(self._vol))
         pres = self._pres1
-        flow = self._pres2
-        flow = self._fr
+        flow = self._flow
         self.i = self.pointer % (self.chunkSize)
         if self.i == 0 and self.firstCycle == 0:
             tmp = np.empty((self.chunkSize, 3))
