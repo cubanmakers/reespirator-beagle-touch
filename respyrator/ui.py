@@ -9,7 +9,7 @@ from PyQt5 import QtCore, QtWidgets, uic
 
 from respyrator import core, serial
 
-pg.setConfigOption('background', "052049")
+pg.setConfigOption('background', '052049')
 pg.setConfigOption('leftButtonPan', False)
 
 
@@ -181,7 +181,7 @@ class MainWindow(QtWidgets.QDialog):
 
     def recruit_on(self):
         self.kill_recruit_timmer()
-        self.serial_send('RECRUIT ON')
+        self.serial_send('RECRUIT 1')
         self._recruit = True
         self.buttonRecruit.setStyleSheet(self._recruit_on_stylesheet)
         self.buttonRecruit.setText(self._recruit_on_text)
@@ -189,7 +189,7 @@ class MainWindow(QtWidgets.QDialog):
 
     def recruit_off(self):
         self.kill_recruit_timmer()
-        self.serial_send('RECRUIT OFF')
+        self.serial_send('RECRUIT 0')
         self._recruit = False
         self.buttonRecruit.setStyleSheet(self._recruit_off_stylesheet)
         self.buttonRecruit.setText(self._recruit_off_text)
