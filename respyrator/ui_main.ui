@@ -1037,7 +1037,7 @@ border-radius: 3px;
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="textPip">
+    <widget class="QLabel" name="configPip">
      <property name="geometry">
       <rect>
        <x>62</x>
@@ -1293,7 +1293,7 @@ border-radius: 3px;</string>
       <string>-</string>
      </property>
     </widget>
-    <widget class="QLabel" name="textFR">
+    <widget class="QLabel" name="configFr">
      <property name="geometry">
       <rect>
        <x>62</x>
@@ -1600,7 +1600,7 @@ border-radius: 3px;</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="textPeep">
+    <widget class="QLabel" name="configPeep">
      <property name="geometry">
       <rect>
        <x>62</x>
