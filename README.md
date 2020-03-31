@@ -11,7 +11,7 @@ Clonar la rama y instalar las dependencias
 pip3 install -r requirements.txt
 ```
 
-# respyratorctl 
+# respyratorctl
 Con este comando se controla la interfaz.
 
 Iniciar la UI con el dispositivo conectado...
@@ -23,5 +23,3 @@ Si no hay dispositivo conectado, usar el comando
 ```bash
 respyratorctl ui --debug
 ```
-
-

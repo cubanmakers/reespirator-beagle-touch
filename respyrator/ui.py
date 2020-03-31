@@ -1,11 +1,13 @@
 ##############################################################################
 # For copyright and license notices, see LICENSE file in root directory
 ##############################################################################
-from PyQt5 import QtWidgets, uic, QtCore
-from respyrator import core, serial
+import sys
+
 import numpy as np
 import pyqtgraph as pg
-import sys
+from PyQt5 import QtCore, QtWidgets, uic
+
+from respyrator import core, serial
 
 pg.setConfigOption('background', "052049")
 pg.setConfigOption('leftButtonPan', False)

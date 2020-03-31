@@ -5,8 +5,8 @@ import logging
 import os
 import subprocess
 import sys
-import yaml
 
+import yaml
 
 
 class Core:

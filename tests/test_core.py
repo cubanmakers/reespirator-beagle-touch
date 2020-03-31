@@ -2,6 +2,7 @@
 # For copyright and license notices, see LICENSE file in root directory
 ##############################################################################
 import unittest
+
 from respyrator import core
 
 

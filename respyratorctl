@@ -16,12 +16,14 @@ Options:
     -d, debug        Debug mode, use fake serial for dev porpouses
     -r, record       Record all data sended and received in files
 """
-from docopt import docopt
-from serial import Serial
 import os
-import respyrator
 import sys
 import unittest
+
+from serial import Serial
+
+import respyrator
+from docopt import docopt
 
 
 def help():

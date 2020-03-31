@@ -1,13 +1,15 @@
 ##############################################################################
 # For copyright and license notices, see LICENSE file in root directory
 ##############################################################################
-import os
-import serial
-import time
-import sys
-import glob
-import threading
 import datetime
+import glob
+import os
+import sys
+import threading
+import time
+
+import serial
+
 import respyrator
 
 
