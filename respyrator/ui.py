@@ -98,7 +98,8 @@ class MainWindow(QtWidgets.QDialog):
         if not line:
             return
         line = str(line)
-        data = line.split(' ')
+        data = line.replace('\r', '').replace('\n', '').split(' ')
+        core.logger.debug('data: %s' % data)
         # frame: CONFIG pip peep rpm
         if data[0] == 'CONFIG':
             self._pip = int(data[1])
@@ -107,14 +108,15 @@ class MainWindow(QtWidgets.QDialog):
             self.update()
         # frame: DT pres1 pres2 vol flow
         elif data[0] == 'DT':
-            self._pres1 = data[1]
-            self._pres2 = data[2]
-            self._vol = data[3]
-            self._flow = data[4]
+            core.logger.info(data)
+            self._pres1 = int(data[1])
+            self._pres2 = int(data[2])
+            self._vol = int(data[3])
+            self._flow = int(data[4])
             self.update()
         # frame: VOL vol
         elif data[0] == 'VOL':
-            self._vol = [1]
+            self._vol = data[1]
             self.update()
 
     def plot(self, chartIndex, widget, title, hour, temperature):
