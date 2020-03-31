@@ -1,0 +1,111 @@
+#!/usr/bin/python3
+"""resPyRator UI
+
+Usage:
+  respyrator help
+  respyrator version
+  respyrator dev-test
+  respyrator search
+  respyrator record SERIAL FILENAME
+  respyrator ui [-d|--debug]
+
+Options:
+    -h, help       Show help
+    -v, version    Version
+    -d, debug      Debug
+"""
+from docopt import docopt
+from serial import Serial
+import os
+import respyrator
+import subprocess
+import sys
+import unittest
+
+
+def help():
+    print(__doc__)
+
+
+def version():
+    print('Version %s' % respyrator.__version__)
+
+
+def dev_test():
+    loader = unittest.TestLoader()
+    tests = loader.discover('.')
+    testRunner = unittest.runner.TextTestRunner()
+    testRunner.run(tests)
+
+
+def search():
+    ports = respyrator.serial.serial_ports_get()
+    if not ports:
+        print('Not ports found, check if you are administrator or root')
+        return
+    devices = {}
+    for port in ports:
+        msg_ok = '%s \tOK \n' % port
+        msg_ko = '%s \tDEVICE UNKNOW\n' % port
+        msg_on = '%s \t...' % port
+        sys.stderr.write(msg_on)
+        sys.stderr.flush()
+        frame = respyrator.serial.serial_port_frame_get(port)
+        if frame and isinstance(frame, respyrator.data_frame.RxFrame):
+            sys.stderr.write('\b' * (len(msg_on) + 2))
+            sys.stderr.write(msg_ok)
+            sys.stderr.flush()
+            devices[port] = frame
+        else:
+            sys.stderr.write('\b' * (len(msg_on) + 2))
+            sys.stderr.write(msg_ko)
+            sys.stderr.flush()
+    print('Found %s devices' % len(devices))
+    for k, v in devices.items():
+        print('\t %s protocol version %s' % (k, v.protocol_version))
+
+
+def record(serial, filename):
+    serial = Serial(port=serial, baudrate=115200, timeout=0.2)
+    df = respyrator.data_frame.DataFrame(serial)
+    df.record_start()
+    print('Press Control-C for finish record')
+    try:
+        count = 1
+        txt = ''
+        while True:
+            df.read()
+            if txt:
+                sys.stderr.write('\b' * len(txt))
+            txt = '%d frame' % count
+            sys.stderr.write(txt)
+            sys.stderr.flush()
+            count += 1
+    except KeyboardInterrupt:
+        pass
+    finally:
+        df.record_stop(filename)
+        print('\nFile "%s" created' % os.path.abspath(filename))
+
+
+def ui(args):
+    respyrator.ui.app()
+
+
+if __name__ == '__main__':
+    args = docopt(__doc__, version=respyrator.__version__)
+    respyrator.core.set_debug(args.get('--debug', False))
+    if respyrator.core.debug:
+        print('Debug mode on!')
+    if args.get('help'):
+        help()
+    elif args.get('version'):
+        version()
+    elif args.get('dev-test'):
+        dev_test()
+    elif args.get('search'):
+        search()
+    elif args.get('record'):
+        record(args['SERIAL'], args['FILENAME'])
+    elif args.get('ui'):
+        ui(args)
