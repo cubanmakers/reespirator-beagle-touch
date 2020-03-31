@@ -97,7 +97,7 @@ class MainWindow(QtWidgets.QDialog):
         if not line:
             return
         data = line.strip().decode().split(' ')
-        core.logger.debug('Read line: %s' % data)
+        # core.logger.debug('Read line: %s' % data)
         # frame: CONFIG pip peep rpm
         if data[0] == 'CONFIG':
             self._pip = int(data[1])

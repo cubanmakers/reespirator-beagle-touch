@@ -121,11 +121,10 @@ class FakeSerial:
 
 
 class FileSerial(Serial):
-    def __init__(self, file_name=None, sleep=0.2, loop=True):
+    def __init__(self, file_name=None, loop=True):
         self._loop = loop
         self._lines = []
         self._waiting = True
-        self.sleep = sleep
         if not os.path.exists(file_name):
             raise Exception(
                 'File "%s" with samples frames not exists' % file_name)
