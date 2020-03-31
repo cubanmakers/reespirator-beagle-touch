@@ -93,30 +93,33 @@ class MainWindow(QtWidgets.QDialog):
         self.serial.flush()
 
     def serial_read(self):
+        def parseNumber(val):
+            return int([v for v in val if v.isdigit()])
+
         line = self.serial.read_until()
         core.logger.debug('Read line: %s' % line)
         if not line:
             return
         line = str(line)
-        data = line.replace('\\\r', '').replace('\\\n', '').split(' ')
+        data = line.split(' ')
         core.logger.debug('data: %s' % data)
         # frame: CONFIG pip peep rpm
         if data[0] == 'CONFIG':
-            self._pip = int(data[1])
-            self._peep = int(data[2])
-            self._fr = int(data[3])
+            self._pip = parseNumber(data[1])
+            self._peep = parseNumber(data[2])
+            self._fr = parseNumber(data[3])
             self.update()
         # frame: DT pres1 pres2 vol flow
         elif data[0] == 'DT':
             core.logger.info(data)
-            self._pres1 = int(data[1])
-            self._pres2 = int(data[2])
-            self._vol = int(data[3])
-            self._flow = int(data[4])
+            self._pres1 = parseNumber(data[1])
+            self._pres2 = parseNumber(data[2])
+            self._vol = parseNumber(data[3])
+            self._flow = parseNumber(data[4])
             self.update()
         # frame: VOL vol
         elif data[0] == 'VOL':
-            self._vol = data[1]
+            self._vol = parseNumber(data[1])
             self.update()
 
     def plot(self, chartIndex, widget, title, hour, temperature):
