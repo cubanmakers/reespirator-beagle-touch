@@ -94,11 +94,10 @@ class MainWindow(QtWidgets.QDialog):
 
     def serial_read(self):
         line = self.serial.read_until()
-        core.logger.debug('Read line: %s' % line)
         if not line:
             return
         data = line.strip().decode().split(' ')
-        core.logger.debug('data: %s' % data)
+        core.logger.debug('Read line: %s' % data)
         # frame: CONFIG pip peep rpm
         if data[0] == 'CONFIG':
             self._pip = int(data[1])
