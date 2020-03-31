@@ -42,6 +42,7 @@ class Core:
         default.update(config)
         if self.debug:
             default['log_level'] = 'DEBUG'
+        default['serial_file'] = None
         return default
 
     def setup_logging(self):
@@ -62,7 +63,7 @@ class Core:
     def path(self, *args):
         return os.path.abspath(os.path.join(os.path.dirname(__file__), *args))
 
-    def popen(cmd, verbose=False):
+    def popen(self, cmd, verbose=False):
         logging.debug('Execute shell command %s' % ' '.join(cmd))
         process = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

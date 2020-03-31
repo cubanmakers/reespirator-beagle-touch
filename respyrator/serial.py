@@ -115,8 +115,10 @@ class FakeSerial:
         pass
 
 
-class FileSerial:
-    def __init__(self, file_name=None, sleep=0.2):
+class FileSerial(Serial):
+    def __init__(self, file_name=None, sleep=0.2, loop=True):
+        self._loop = loop
+        self._lines = []
         self._waiting = True
         self.sleep = sleep
         if not os.path.exists(file_name):
@@ -124,24 +126,24 @@ class FileSerial:
                 'File "%s" with samples frames not exists' % file_name)
         self.file_name = file_name
 
+    def open(self):
+        with open(self.file_name, 'r') as fp:
+            self._lines = fp.read().split('\n')
+
     @property
     def in_waiting(self):
         return self._waiting
 
-    def read(self, size):
-        def _loop(self, size):
-            with open(self.file_name, 'rb') as fp:
-                while True:
-                    byte = fp.read(size)
-                    if not byte:
-                        break
-                    yield byte
-                    self._waiting = True
-                    time.sleep(self.sleep)
-                    self._waiting = False
+    def read(self):
+        if not self._lines and self._loop:
+            self.open()
+        if not self._lines:
+            return ''
+        line = self._lines.pop(0)
+        return line
 
-        generator = _loop(size)
-        return next(generator)
+    def read_until(self, *args, **kwargs):
+        return self.read()
 
     def write(self, byte):
         pass

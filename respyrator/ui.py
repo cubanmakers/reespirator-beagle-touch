@@ -23,6 +23,7 @@ class MainWindow(QtWidgets.QDialog):
         self._pip = 20
         self._peep = 6
         self._fr = 14
+
         self._recruit = False
         self._recruit_on_text = 'STOP RECRUIT'
         self._recruit_off_text = 'RECRUIT'
@@ -67,6 +68,10 @@ class MainWindow(QtWidgets.QDialog):
         return res
 
     def serial_setup(self):
+        file = core.config['serial_file']
+        if file:
+            self.serial = serial.FileSerial(file)
+            return
         port = core.config['serial_port']
         if not port and core.debug:
             core.logger.debug(
@@ -94,12 +99,28 @@ class MainWindow(QtWidgets.QDialog):
 
     def serial_read(self):
         line = self.serial.read_until()
+        core.logger.debug('Read line: %s' % line)
         if not line:
             return
         line = str(line)
-        vals = search("DT {pres1:d} {pres2:d} {vol:d} {flow:d}", line)
-        if vals:
-            self.update(vals.named['pres1'], vals.named['flow'])
+        data = line.split(' ')
+        # frame: CONFIG pip peep rpm
+        if data[0] == 'CONFIG':
+            self._pip = int(data[1])
+            self._peep = int(data[2])
+            self._fr = int(data[3])
+            self.update()
+        # frame: DT pres1 pres2 vol flow
+        elif data[0] == 'DT':
+            self._pres1 = data[1]
+            self._pres2 = data[2]
+            self._vol = data[3]
+            # self._flow = data[4]
+            self.update(data[1], data[2])
+        # frame: VOL vol
+        elif data[0] == 'VOL':
+            self._vol = [1]
+            self.update()
 
     def plot(self, chartIndex, widget, title, hour, temperature):
         self.myCurve[chartIndex] = widget.plot(hour, temperature, title=title)

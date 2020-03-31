@@ -4,8 +4,9 @@
 Usage:
   respyrator help
   respyrator version
-  respyrator ui [-d|--debug] [-r|--record] [-a|--auto] [-p|--port]
+  respyrator ui [-d|--debug] [-r|--record] [-a|--auto] [-p|--port] [FILE]
   respyrator test
+  respyrator install
 
 Options:
     -h, help         Show help
@@ -96,15 +97,18 @@ def ui(args):
             sys.exit(0)
         respyrator.core.logger.info('Auto search port %s' % devices[0])
         respyrator.core.config['port'] = devices[0]
+    respyrator.core.config['serial_file'] = args.get('FILE')
     respyrator.ui.app()
 
 
-# def install(args):
-#     systemd_fname = respyrator.core.path('..', 'respyrator.service')
-#     respyrator.core.popen('cp %s /etc/systemd/system/' % systemd_fname)
-#     respyrator.core.popen('systemctl enable paranoia')
-#     print('Installed!, you must launch ui with ')
-#     respyrator.core.popen('systemctl start paranoia')
+def install(args):
+    pass
+    # TODO probe install process
+    # systemd_fname = respyrator.core.path('..', 'respyrator.service')
+    # respyrator.core.popen(['cp', systemd_fname, '/etc/systemd/system/'])
+    # respyrator.core.popen(['systemctl', 'enable', 'respyrator'])
+    # respyrator.core.popen(['systemctl', 'start', 'respyrator'])
+    # print('Installed!')
 
 
 if __name__ == '__main__':
@@ -122,3 +126,5 @@ if __name__ == '__main__':
         test()
     elif args.get('ui'):
         ui(args)
+    elif args.get('install'):
+        install(args)
