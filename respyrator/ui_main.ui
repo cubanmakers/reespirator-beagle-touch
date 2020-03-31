@@ -484,13 +484,17 @@ QTabBar::tab {
   border-radius: 3px;
   width: 80px;
   margin: 0px;
+}
+
+QTabBar::tab:first {
+  margin-right: 20px;
 }</string>
    </property>
    <property name="tabPosition">
     <enum>QTabWidget::South</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
