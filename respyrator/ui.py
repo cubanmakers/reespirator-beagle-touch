@@ -98,7 +98,7 @@ class MainWindow(QtWidgets.QDialog):
         if not line:
             return
         line = str(line)
-        data = line.replace('\r', '').replace('\n', '').split(' ')
+        data = line.replace('\\\r', '').replace('\\\n', '').split(' ')
         core.logger.debug('data: %s' % data)
         # frame: CONFIG pip peep rpm
         if data[0] == 'CONFIG':
