@@ -1,4 +1,4 @@
-Unit]
+[Unit]
 Description=reespirator UI
 After=graphical.target
 Wants=graphical.target
