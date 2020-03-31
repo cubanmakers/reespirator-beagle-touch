@@ -99,6 +99,14 @@ def ui(args):
     respyrator.ui.app()
 
 
+# def install(args):
+#     systemd_fname = respyrator.core.path('..', 'respyrator.service')
+#     respyrator.core.popen('cp %s /etc/systemd/system/' % systemd_fname)
+#     respyrator.core.popen('systemctl enable paranoia')
+#     print('Installed!, you must launch ui with ')
+#     respyrator.core.popen('systemctl start paranoia')
+
+
 if __name__ == '__main__':
     args = docopt(__doc__, version=respyrator.__version__)
     respyrator.core.set_debug(args.get('--debug', False))

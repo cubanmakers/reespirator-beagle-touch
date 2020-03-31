@@ -36,7 +36,7 @@ class Core:
         config_fname = self.path('..', 'config.yml')
         if not os.path.exists(config_fname):
             with open('config.yml', 'w') as f:
-                f.write(yaml.dump(default))
+                f.write(yaml.dump(default, default_flow_style=False))
         with open(config_fname) as f:
             config = yaml.load(f.read()) or {}
         default.update(config)
