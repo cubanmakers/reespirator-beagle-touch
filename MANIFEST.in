@@ -1,0 +1,7 @@
+include *.rst
+include *.md
+global-exclude *.py[co]
+global-exclude __pycache__
+
+recursive-include src/ *.ui
+recursive-include src/ *.data
