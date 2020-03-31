@@ -23,6 +23,7 @@ class MainWindow(QtWidgets.QDialog):
         self._pip = 20
         self._peep = 6
         self._fr = 14
+        self._flow = 0
         self._vol = 99
         self._config_pip = 20
         self._config_peep = 6
