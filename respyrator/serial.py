@@ -20,7 +20,6 @@ def serial_ports_get():
         ports = glob.glob('/dev/tty.*')
     else:
         raise EnvironmentError('Unsupported platform')
-
     result = []
     for port in ports:
         try:
@@ -46,13 +45,15 @@ def serial_port_frames_get(port, timeout=3):
     return frames
 
 
-def serial_discovery_port():
-    ports = serial_ports_get()
+def serial_discovery_port(ports, quick=False):
+    result = []
     for port in ports:
         frames = serial_port_frames_get(port)
-        if frames and any(['DT' in f for f in frames]):
-            return port
-    return None
+        if frames and any(['DT' in str(f) for f in frames]):
+            result.append(port)
+            if quick:
+                return [port]
+    return result
 
 
 def serial_get(port):

@@ -28,3 +28,6 @@ pip-log.txt
 
 # PID file
 pid
+
+# Config file
+config.yml

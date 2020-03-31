@@ -4,21 +4,21 @@
 Usage:
   respyrator help
   respyrator version
-  respyrator dev-test
-  respyrator search
-  respyrator record SERIAL FILENAME
-  respyrator ui [-d|--debug]
+  respyrator ui [-d|--debug] [-r|--record] [-a|--auto] [-p|--port]
+  respyrator test
 
 Options:
-    -h, help       Show help
-    -v, version    Version
-    -d, debug      Debug
+    -h, help         Show help
+    -v, version      Version
+    -a, auto         Search an arduino device connected a port
+    -p, port         Force a serial port, for example: /dev/ttyUSB0
+    -d, debug        Debug mode, use fake serial for dev porpouses
+    -r, record       Record all data sended and received in files
 """
 from docopt import docopt
 from serial import Serial
 import os
 import respyrator
-import subprocess
 import sys
 import unittest
 
@@ -31,18 +31,20 @@ def version():
     print('Version %s' % respyrator.__version__)
 
 
-def dev_test():
+def test():
     loader = unittest.TestLoader()
     tests = loader.discover('.')
     testRunner = unittest.runner.TextTestRunner()
     testRunner.run(tests)
 
 
-def search():
+def search_serial_devices():
     ports = respyrator.serial.serial_ports_get()
     if not ports:
-        print('Not ports found, check if you are administrator or root')
-        return
+        print(
+            'For use auto discovery serial port, you must administrator or '
+            'root')
+        sys.exit(-1)
     devices = {}
     for port in ports:
         msg_ok = '%s \tOK \n' % port
@@ -50,19 +52,18 @@ def search():
         msg_on = '%s \t...' % port
         sys.stderr.write(msg_on)
         sys.stderr.flush()
-        frame = respyrator.serial.serial_port_frame_get(port)
-        if frame and isinstance(frame, respyrator.data_frame.RxFrame):
+        device = respyrator.serial.serial_discovery_port([port])
+        if device:
             sys.stderr.write('\b' * (len(msg_on) + 2))
             sys.stderr.write(msg_ok)
             sys.stderr.flush()
-            devices[port] = frame
+            devices.append(device)
         else:
             sys.stderr.write('\b' * (len(msg_on) + 2))
             sys.stderr.write(msg_ko)
             sys.stderr.flush()
     print('Found %s devices' % len(devices))
-    for k, v in devices.items():
-        print('\t %s protocol version %s' % (k, v.protocol_version))
+    return devices
 
 
 def record(serial, filename):
@@ -89,23 +90,27 @@ def record(serial, filename):
 
 
 def ui(args):
+    if args.get('--auto'):
+        devices = search_serial_devices()
+        if not devices:
+            sys.exit(0)
+        respyrator.core.logger.info('Auto search port %s' % devices[0])
+        respyrator.core.config['port'] = devices[0]
     respyrator.ui.app()
 
 
 if __name__ == '__main__':
     args = docopt(__doc__, version=respyrator.__version__)
     respyrator.core.set_debug(args.get('--debug', False))
-    if respyrator.core.debug:
-        print('Debug mode on!')
+    if args.get('--record'):
+        respyrator.core.config['record'] = True
+    if args.get('--port'):
+        respyrator.core.config['serial_port'] = True
     if args.get('help'):
         help()
     elif args.get('version'):
         version()
-    elif args.get('dev-test'):
-        dev_test()
-    elif args.get('search'):
-        search()
-    elif args.get('record'):
-        record(args['SERIAL'], args['FILENAME'])
+    elif args.get('test'):
+        test()
     elif args.get('ui'):
         ui(args)

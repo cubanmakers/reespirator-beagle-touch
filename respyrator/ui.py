@@ -69,7 +69,8 @@ class MainWindow(QtWidgets.QDialog):
             self.serial = serial.FakeSerial()
             return
         if not port:
-            port = serial.serial_discovery_port()
+            ports = serial.serial_ports_get()
+            port = serial.serial_discovery_port(ports, quick=True)
         if not port:
             print(
                 'You must set a "serial_port" value for config file '

@@ -5,6 +5,8 @@ import logging
 import os
 import subprocess
 import sys
+import yaml
+
 
 
 class Core:
@@ -27,19 +29,23 @@ class Core:
     def load_config(self):
         default = {
             'serial_port': None,
+            'record': False,
             'log_level': 'INFO',
             'log_formatter': '%(asctime)s - %(levelname)s - %(message)s',
         }
-        # TODO Load config from yml file
+        config_fname = self.path('..', 'config.yml')
+        if not os.path.exists(config_fname):
+            with open('config.yml', 'w') as f:
+                f.write(yaml.dump(default))
+        with open(config_fname) as f:
+            config = yaml.load(f.read()) or {}
+        default.update(config)
         if self.debug:
             default['log_level'] = 'DEBUG'
         return default
 
     def setup_logging(self):
         logger = logging.getLogger()
-        print(self.config['log_level'])
-        print(self.config['log_level'])
-        print(self.config['log_level'])
         log_level = (
             logging.DEBUG
             if self.config['log_level'].lower() == 'debug'
