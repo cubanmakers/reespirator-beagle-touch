@@ -1,0 +1,20 @@
+[Unit]
+Description=reespirator UI
+After=graphical.target
+Wants=graphical.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/reespirator_ui/
+ExecStart=/opt/reespirator_ui/respyratorctl ui
+OOMScoreAdjust=-200
+Restart=always
+RestartSec=500ms
+StartLimitIntervalSec=0
+StartLimitBurst=10
+StartLimitAction=none
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical.target
