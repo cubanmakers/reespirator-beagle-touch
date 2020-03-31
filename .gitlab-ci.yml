@@ -8,6 +8,7 @@ stages:
 test:
   stage: test
   script:
+    - pre-commit run --all-files
     - apt-get -qqy update && apt-get -qqy install libgl1
     - pip install -r requirements-test.txt
     - pytest tests
