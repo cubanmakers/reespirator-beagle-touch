@@ -147,7 +147,7 @@ class FileSerial(Serial):
         if not self._lines:
             return ''
         line = self._lines.pop(0)
-        return line
+        return line.encode()
 
     def read_until(self, *args, **kwargs):
         return self.read()

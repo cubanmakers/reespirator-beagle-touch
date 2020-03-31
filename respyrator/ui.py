@@ -17,6 +17,7 @@ class MainWindow(QtWidgets.QDialog):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._ignore_config = []
         self._serial = None
         self._pres1 = 0
         self._pres2 = 0
@@ -89,6 +90,16 @@ class MainWindow(QtWidgets.QDialog):
             raise Exception('Can\'t open serial port %s' % port)
 
     def serial_send(self, msg):
+        def no_ignore_config():
+            if self._ignore_config:
+                self._ignore_config.pop(0)
+
+        self._ignore_config.append(1)
+        pg.QtCore.QTimer().singleShot(5000, no_ignore_config)
+
+        timer = pg.QtCore.QTimer()
+        timer.timeout.connect(self.serial_read)
+
         core.logger.info('Serial send "%s"' % msg)
         self.serial.write(bytes('%s\r\n' % msg, 'utf8'))
         self.serial.flush()
@@ -98,9 +109,12 @@ class MainWindow(QtWidgets.QDialog):
         if not line:
             return
         data = line.strip().decode().split(' ')
-        core.logger.debug('Read line: %s' % data)
+        # core.logger.debug('Read line: %s' % data)
         # frame: CONFIG pip peep rpm
         if data[0] == 'CONFIG':
+            if self._ignore_config:
+                core.logger.debug('Ignore config')
+                return
             self._config_pip = int(data[1])
             self._config_peep = int(data[2])
             self._config_fr = int(data[3])
