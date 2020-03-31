@@ -536,7 +536,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>99</x>
-       <y>115</y>
+       <y>125</y>
        <width>91</width>
        <height>14</height>
       </rect>
@@ -618,9 +618,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_12">
      <property name="geometry">
       <rect>
-       <x>1</x>
+       <x>6</x>
        <y>170</y>
-       <width>91</width>
+       <width>86</width>
        <height>16</height>
       </rect>
      </property>
@@ -679,7 +679,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>1</x>
-       <y>240</y>
+       <y>250</y>
        <width>91</width>
        <height>14</height>
       </rect>
@@ -728,9 +728,9 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>100</x>
+       <x>98</x>
        <y>170</y>
-       <width>91</width>
+       <width>98</width>
        <height>16</height>
       </rect>
      </property>
@@ -789,7 +789,7 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>240</y>
+       <y>250</y>
        <width>91</width>
        <height>14</height>
       </rect>
@@ -811,10 +811,10 @@ color: rgb(255, 255, 255);</string>
     <widget class="QPushButton" name="buttonRecruit">
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>22</x>
        <y>280</y>
-       <width>113</width>
-       <height>71</height>
+       <width>151</width>
+       <height>81</height>
       </rect>
      </property>
      <property name="font">
