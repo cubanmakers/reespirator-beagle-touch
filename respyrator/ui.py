@@ -59,7 +59,7 @@ class MainWindow(QtWidgets.QDialog):
 
     def show(self, *args, **kwargs):
         res = super().show()
-        self.timer.start(10)
+        self.timer.start()
         return res
 
     def serial_setup(self):
