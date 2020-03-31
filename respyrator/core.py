@@ -36,9 +36,9 @@ class Core:
         config_fname = self.path('..', 'config.yml')
         if not os.path.exists(config_fname):
             with open('config.yml', 'w') as f:
-                f.write(yaml.dump(default, default_flow_style=False))
+                f.write(yaml.safe_dump(default, default_flow_style=False))
         with open(config_fname) as f:
-            config = yaml.load(f.read()) or {}
+            config = yaml.safe_load(f.read()) or {}
         default.update(config)
         if self.debug:
             default['log_level'] = 'DEBUG'
