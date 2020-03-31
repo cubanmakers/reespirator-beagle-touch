@@ -1,10 +1,7 @@
 ##############################################################################
 # For copyright and license notices, see LICENSE file in root directory
 ##############################################################################
-from datetime import datetime
-from parse import *
 from PyQt5 import QtWidgets, uic, QtCore
-from pyqtgraph import PlotWidget, plot
 from respyrator import core, serial
 import numpy as np
 import pyqtgraph as pg
@@ -28,15 +25,12 @@ class MainWindow(QtWidgets.QDialog):
         self._config_pip = 20
         self._config_peep = 6
         self._config_fr = 14
-
         self._recruit = False
         self._recruit_on_text = 'STOP RECRUIT'
         self._recruit_off_text = 'RECRUIT'
         self._recruit_timmer = None
-
         self.serial_setup()
         uic.loadUi(core.path('ui_main.ui'), self)
-        # pg.setConfigOption('background', (230, 230, 230))
         self.buttonUpPip.clicked.connect(self.buttonUpPipClicked)
         self.buttonDownPip.clicked.connect(self.buttonDownPipClicked)
         self.buttonUpPeep.clicked.connect(self.buttonUpPeepClicked)
@@ -48,21 +42,17 @@ class MainWindow(QtWidgets.QDialog):
         self._recruit_off_stylesheet = self.buttonRecruit.styleSheet()
         self.timer = pg.QtCore.QTimer()
         self.timer.timeout.connect(self.serial_read)
-
         self.myCurve = [0, 0, 0]
         self.chunkSize = 200
         self.split = 100
         self.xAxis = np.arange(self.chunkSize)
         self.data1 = np.zeros((self.chunkSize, 3))
-        self.plot(0, self.graphPressure, "P", self.xAxis, self.data1[:,0])
-        self.plot(1, self.graphFlow, "C", self.xAxis, self.data1[:,1])
-        #self.plot(2,self.graphVolume, "F",self.xAxis, self.data1[:,2])
+        self.plot(0, self.graphPressure, "P", self.xAxis, self.data1[:, 0])
+        self.plot(1, self.graphFlow, "C", self.xAxis, self.data1[:, 1])
         self.myCurve[0].setPen(pg.mkPen('fbcca7', width=2))
         self.myCurve[1].setPen(pg.mkPen('a3dade', width=2))
-        #self.myCurve[2].setPen(pg.mkPen('y', width=3))
         self.pointer = 0
         self.firstCycle = 1
-
         self.update()
 
     def show(self, *args, **kwargs):
@@ -155,7 +145,6 @@ class MainWindow(QtWidgets.QDialog):
             self.pointer = self.split
             self.i = self.pointer
         self.data1[self.i, 0] = pres
-        #self.data1[self.i,1] = vol
         self.data1[self.i, 1] = float(flow) / 1000.0
         self.myCurve[0].setData(
             x=self.xAxis[:self.i + 1],
@@ -200,37 +189,37 @@ class MainWindow(QtWidgets.QDialog):
     def buttonUpPipClicked(self):
         if self._config_pip <= 79:
             self._config_pip += 1
-        self.update_values()
+        self.update()
         self.serial_send('CONFIG PIP %s' % self._config_pip)
 
     def buttonDownPipClicked(self):
         if self._config_pip >= 1:
             self._config_pip -= 1
-        self.update_values()
+        self.update()
         self.serial_send('CONFIG PIP %s' % self._config_pip)
 
     def buttonUpPeepClicked(self):
         if self._config_peep < self._config_pip:
             self._config_peep += 1
-        self.update_values()
+        self.update()
         self.serial_send('CONFIG PEEP %s' % self._config_peep)
 
     def buttonDownPeepClicked(self):
         if self._config_peep > 0:
             self._config_peep -= 1
-        self.update_values()
+        self.update()
         self.serial_send('CONFIG PEEP %s' % self._config_peep)
 
     def buttonUpFRClicked(self):
         if self._config_fr < 30:
             self._config_fr += 1
-        self.update_values()
+        self.update()
         self.serial_send('CONFIG BPM %s' % self._config_fr)
 
     def buttonDownFRClicked(self):
         if self._config_fr > 3:
             self._config_fr -= 1
-        self.update_values()
+        self.update()
         self.serial_send('CONFIG BPM %s' % self._config_fr)
 
     def buttonRecruitClicked(self):
