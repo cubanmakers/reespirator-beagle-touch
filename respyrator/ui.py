@@ -106,10 +106,9 @@ class MainWindow(QtWidgets.QDialog):
             self.update()
         # frame: DT pres1 pres2 vol flow
         elif data[0] == 'DT':
-            core.logger.info(data)
             self._pres1 = int(data[1])
             self._pres2 = int(data[2])
-            self._vol = int(data[3])
+            # self._vol = int(data[3])
             self._flow = int(data[4])
             self.update()
         # frame: VOL vol

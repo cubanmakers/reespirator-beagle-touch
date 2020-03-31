@@ -69,29 +69,6 @@ def search_serial_devices():
     return devices
 
 
-def record(serial, filename):
-    serial = Serial(port=serial, baudrate=115200, timeout=0.2)
-    df = respyrator.data_frame.DataFrame(serial)
-    df.record_start()
-    print('Press Control-C for finish record')
-    try:
-        count = 1
-        txt = ''
-        while True:
-            df.read()
-            if txt:
-                sys.stderr.write('\b' * len(txt))
-            txt = '%d frame' % count
-            sys.stderr.write(txt)
-            sys.stderr.flush()
-            count += 1
-    except KeyboardInterrupt:
-        pass
-    finally:
-        df.record_stop(filename)
-        print('\nFile "%s" created' % os.path.abspath(filename))
-
-
 def ui(args):
     if args.get('--auto'):
         devices = search_serial_devices()
@@ -100,6 +77,7 @@ def ui(args):
         respyrator.core.logger.info('Auto search port %s' % devices[0])
         respyrator.core.config['port'] = devices[0]
     respyrator.core.config['serial_file'] = args.get('FILE')
+    respyrator.core.config['record'] = True
     respyrator.ui.app()
 
 
