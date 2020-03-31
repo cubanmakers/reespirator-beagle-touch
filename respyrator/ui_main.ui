@@ -502,7 +502,7 @@ QTabBar::tab {
        <x>0</x>
        <y>80</y>
        <width>91</width>
-       <height>35</height>
+       <height>50</height>
       </rect>
      </property>
      <property name="font">
@@ -536,9 +536,9 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>99</x>
-       <y>125</y>
+       <y>135</y>
        <width>91</width>
-       <height>14</height>
+       <height>30</height>
       </rect>
      </property>
      <property name="font">
@@ -558,10 +558,10 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="textFR_2">
      <property name="geometry">
       <rect>
-       <x>1</x>
-       <y>200</y>
+       <x>0</x>
+       <y>220</y>
        <width>91</width>
-       <height>35</height>
+       <height>50</height>
       </rect>
      </property>
      <property name="font">
@@ -594,10 +594,10 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>99</x>
-       <y>50</y>
+       <x>100</x>
+       <y>35</y>
        <width>91</width>
-       <height>16</height>
+       <height>40</height>
       </rect>
      </property>
      <property name="font">
@@ -618,10 +618,10 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_12">
      <property name="geometry">
       <rect>
-       <x>6</x>
-       <y>170</y>
-       <width>86</width>
-       <height>16</height>
+       <x>0</x>
+       <y>175</y>
+       <width>91</width>
+       <height>40</height>
       </rect>
      </property>
      <property name="font">
@@ -642,10 +642,10 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="textPeep_2">
      <property name="geometry">
       <rect>
-       <x>99</x>
+       <x>100</x>
        <y>80</y>
        <width>91</width>
-       <height>35</height>
+       <height>50</height>
       </rect>
      </property>
      <property name="font">
@@ -679,9 +679,9 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>1</x>
-       <y>250</y>
+       <y>280</y>
        <width>91</width>
-       <height>14</height>
+       <height>30</height>
       </rect>
      </property>
      <property name="font">
@@ -705,9 +705,9 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>50</y>
+       <y>35</y>
        <width>91</width>
-       <height>16</height>
+       <height>40</height>
       </rect>
      </property>
      <property name="font">
@@ -728,10 +728,10 @@ color: rgb(255, 255, 255);</string>
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>98</x>
-       <y>170</y>
-       <width>98</width>
-       <height>16</height>
+       <x>100</x>
+       <y>175</y>
+       <width>91</width>
+       <height>40</height>
       </rect>
      </property>
      <property name="font">
@@ -743,7 +743,7 @@ color: rgb(255, 255, 255);</string>
       </font>
      </property>
      <property name="text">
-      <string>VOLUMEN</string>
+      <string>VOL</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -753,9 +753,9 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>200</y>
+       <y>220</y>
        <width>91</width>
-       <height>35</height>
+       <height>50</height>
       </rect>
      </property>
      <property name="font">
@@ -789,9 +789,9 @@ color: rgb(255, 255, 255);</string>
      <property name="geometry">
       <rect>
        <x>100</x>
-       <y>250</y>
+       <y>280</y>
        <width>91</width>
-       <height>14</height>
+       <height>30</height>
       </rect>
      </property>
      <property name="font">
@@ -811,8 +811,8 @@ color: rgb(255, 255, 255);</string>
     <widget class="QPushButton" name="buttonRecruit">
      <property name="geometry">
       <rect>
-       <x>22</x>
-       <y>280</y>
+       <x>20</x>
+       <y>320</y>
        <width>151</width>
        <height>81</height>
       </rect>
