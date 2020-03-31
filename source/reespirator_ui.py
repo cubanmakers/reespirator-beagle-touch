@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QDialog):
         if chartIndex == 0:
             widget.setYRange(0, 50)
         else:
-            widget.setYRange(-5, 16)
+            widget.setYRange(-20, 30)
         widget.setMouseEnabled(False, False)
         widget.disableAutoRange()
         widget.showGrid(True, True, 1)
@@ -78,44 +78,50 @@ class MainWindow(QtWidgets.QDialog):
         if self._pip <= 79:
             self._pip += 1
         self.textPip.setText(str(self._pip))
-        ser.write(b"CONFIG PIP " + bytes(self._pip))
+        tmp = "CONFIG PIP " + str(self._pip) + "\r\n"
+        ser.write(bytes(tmp, 'utf8'))
+        ser.flush()
 
     def buttonDownPipClicked(self):
         if self._pip >= 1:
             self._pip -= 1
         self.textPip.setText(str(self._pip))
-        ser.write(b"CONFIG PIP " + bytes(self._pip))
+        tmp = "CONFIG PIP " + str(self._pip) + "\r\n"
+        ser.write(bytes(tmp, 'utf8'))
 
     def buttonUpPeepClicked(self):
         if self._peep < self._pip:
             self._peep += 1
         self.textPeep.setText(str(self._peep))
-        ser.write(b"CONFIG PEEP " + bytes(self._peep))
+        tmp = "CONFIG PEEP " + str(self._peep) + "\r\n"
+        ser.write(bytes(tmp, 'utf8'))
 
     def buttonDownPeepClicked(self):
         if self._peep > 0:
             self._peep -= 1
         self.textPeep.setText(str(self._peep))
-        ser.write(b"CONFIG PEEP " + bytes(self._peep))
+        tmp = "CONFIG PEEP " + str(self._peep) + "\r\n"
+        ser.write(bytes(tmp, 'utf8'))
 
     def buttonUpFRClicked(self):
         if self._fr < 30:
             self._fr += 1
         self.textFR.setText(str(self._fr))
-        ser.write(b"CONFIG BPM " + bytes(self._fr))
+        tmp = "CONFIG BPM " + str(self._fr) + "\r\n"
+        ser.write(bytes(tmp, 'utf8'))
 
     def buttonDownFRClicked(self):
         if self._fr > 3:
             self._fr -= 1
         self.textFR.setText(str(self._fr))
-        ser.write(b"CONFIG BPM " + bytes(self._fr))
+        tmp = "CONFIG BPM " + str(self._fr) + "\r\n"
+        ser.write(bytes(tmp, 'utf8'))
 
     def update(self, pres, flow):
         self.i = self.pointer % (self.chunkSize)
         #logger.info('Updated ' + str(flow) + " at " + str(datetime.now()))
         #logger.info('pointer' + str(self.pointer))
         if self.i == 0 and self.firstCycle == 0:
-          logger.info("splitting")
           tmp = np.empty((self.chunkSize,3))
           tmp[:self.split] = self.data1[self.chunkSize - self.split:]
           self.data1 = tmp
@@ -144,8 +150,8 @@ _r = None
 def readSerial(ser, main):
     global _buffer, _t1, _t2, _r, _updatePending
     _t2 = time.time() * 1000
-    if _t2 - _t1 > 40:
-        logger.info("Fuck" + str(_t2 - _t1))
+    #if _t2 - _t1 > 40:
+        #logger.info("Fuck" + str(_t2 - _t1))
     _t1 = _t2
     #logger.info("readSerial at " + str(datetime.now()))
     line = ser.read_until(b'\n')
@@ -165,7 +171,9 @@ def readSerial(ser, main):
         else:
             #logger.info("Queued" + str(line))
             _buffer += line
-    logger.info("readSerial takes ms=" + str(time.time()*1000 - _t2))
+            if len(line) > 300:
+                _buffer = b""
+    #logger.info("readSerial takes ms=" + str(time.time()*1000 - _t2))
 
 def plotUpdate(main):
     global _updatePending, _r
