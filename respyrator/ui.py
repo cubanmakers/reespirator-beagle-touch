@@ -25,6 +25,7 @@ class MainWindow(QtWidgets.QDialog):
         self._fr = 14
         self._recruit = False
 
+        self.serial_setup()
         uic.loadUi(core.path('ui_main.ui'), self)
         pg.setConfigOption('background', (230, 230, 230))
         self.update_values()
@@ -59,22 +60,25 @@ class MainWindow(QtWidgets.QDialog):
         self.timer.start(10)
         return res
 
-    @property
-    def serial(self):
-        if self._serial is not None:
-            return self._serial
+    def serial_setup(self):
         port = core.config['serial_port']
         if not port and core.debug:
             core.logger.debug(
                 'In debug mode connect to fakeSerial, for force port add '
                 '"serial_port" in config.yml')
-            self._serial = serial.FakeSerial()
-            return self._serial
+            self.serial = serial.FakeSerial()
+            return
         if not port:
             port = serial.serial_discovery_port()
+        if not port:
+            print(
+                'You must set a "serial_port" value for config file '
+                'config.yml')
+            sys.exit(-1)
         core.logger.debug('Connect to port "%s"' % port)
-        self._serial = serial.serial_get(port)
-        return self._serial
+        self.serial = serial.serial_get(port)
+        if not self.serial.is_open:
+            raise Exception('Can\'t open serial port %s' % port)
 
     def serial_send(self, msg):
         core.logger.info('Serial send "%s"' % msg)
@@ -112,12 +116,10 @@ class MainWindow(QtWidgets.QDialog):
         self.data1[self.i,0] = pres
         #self.data1[self.i,1] = vol
         self.data1[self.i,1] = float(flow) / 1000.0
-        #core.logger.info(self.data1[:self.i+1])
         self.myCurve[0].setData(x=self.xAxis[:self.i+1], y=self.data1[:self.i+1,0])
         self.myCurve[1].setData(x=self.xAxis[:self.i+1], y=self.data1[:self.i+1,1])
         #self.myCurve[2].setData(x=self.xAxis[:self.i+1], y=self.data1[:self.i+1,2])
         self.pointer += 1
-        #core.logger.info('Updated2 ' + str(flow) + " at " + str(datetime.now()))
         if self.pointer >= self.chunkSize:
             self.firstCycle = 0
 
