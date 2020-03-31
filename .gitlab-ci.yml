@@ -1,0 +1,13 @@
+---
+
+image: python:3.7
+
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - apt-get -qqy update && apt-get -qqy install libgl1
+    - pip install -r requirements-test.txt
+    - pytest tests

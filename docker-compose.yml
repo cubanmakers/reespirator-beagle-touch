@@ -1,0 +1,15 @@
+---
+
+version: "3"
+
+services:
+  app:
+    image: python:3.7
+    volumes:
+      - ./:/app
+      - sitepackages:/usr/local/lib/python3.7/site-packages
+    working_dir: /app
+    command: /bin/bash
+
+volumes:
+  sitepackages:
