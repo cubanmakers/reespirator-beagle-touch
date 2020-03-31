@@ -89,7 +89,7 @@ class MainWindow(QtWidgets.QDialog):
 
     def serial_send(self, msg):
         core.logger.info('Serial send "%s"' % msg)
-        self.serial.write(bytes('%s\r\n' % msg, 'utf-8'))
+        self.serial.write(bytes('%s\r\n' % msg, 'utf8'))
         self.serial.flush()
 
     def serial_read(self):
