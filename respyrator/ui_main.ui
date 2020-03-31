@@ -490,13 +490,13 @@ QTabBar::tab {
     <enum>QTabWidget::South</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
      <string>INICIO</string>
     </attribute>
-    <widget class="QLabel" name="textPip_2">
+    <widget class="QLabel" name="textPip">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -555,7 +555,7 @@ color: rgb(255, 255, 255);</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="textFR_2">
+    <widget class="QLabel" name="textFr">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -639,7 +639,7 @@ color: rgb(255, 255, 255);</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="textPeep_2">
+    <widget class="QLabel" name="textPeep">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -749,7 +749,7 @@ color: rgb(255, 255, 255);</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="textVolumen">
+    <widget class="QLabel" name="textVol">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -1037,7 +1037,7 @@ border-radius: 3px;
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="textPip">
+    <widget class="QLabel" name="configPip">
      <property name="geometry">
       <rect>
        <x>62</x>
@@ -1293,7 +1293,7 @@ border-radius: 3px;</string>
       <string>-</string>
      </property>
     </widget>
-    <widget class="QLabel" name="textFR">
+    <widget class="QLabel" name="configFr">
      <property name="geometry">
       <rect>
        <x>62</x>
@@ -1600,7 +1600,7 @@ border-radius: 3px;</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="textPeep">
+    <widget class="QLabel" name="configPeep">
      <property name="geometry">
       <rect>
        <x>62</x>
