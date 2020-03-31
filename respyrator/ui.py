@@ -20,9 +20,15 @@ class MainWindow(QtWidgets.QDialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._serial = None
+        self._pres1 = 0
+        self._pres2 = 0
         self._pip = 20
         self._peep = 6
         self._fr = 14
+        self._vol = 99
+        self._config_pip = 20
+        self._config_peep = 6
+        self._config_fr = 14
 
         self._recruit = False
         self._recruit_on_text = 'STOP RECRUIT'
@@ -109,13 +115,13 @@ class MainWindow(QtWidgets.QDialog):
             self._pip = int(data[1])
             self._peep = int(data[2])
             self._fr = int(data[3])
-            self.update()
+            self.update_values()
         # frame: DT pres1 pres2 vol flow
         elif data[0] == 'DT':
             self._pres1 = data[1]
             self._pres2 = data[2]
             self._vol = data[3]
-            # self._flow = data[4]
+            self._flow = data[4]
             self.update(data[1], data[2])
         # frame: VOL vol
         elif data[0] == 'VOL':
@@ -124,7 +130,7 @@ class MainWindow(QtWidgets.QDialog):
 
     def plot(self, chartIndex, widget, title, hour, temperature):
         self.myCurve[chartIndex] = widget.plot(hour, temperature, title=title)
-        widget.setXRange(0,self.chunkSize,padding=0)
+        widget.setXRange(0, self.chunkSize, padding=0)
         if chartIndex == 0:
             widget.setYRange(0, 50)
         else:
@@ -136,34 +142,45 @@ class MainWindow(QtWidgets.QDialog):
     def update(self, pres, flow):
         self.i = self.pointer % (self.chunkSize)
         if self.i == 0 and self.firstCycle == 0:
-            tmp = np.empty((self.chunkSize,3))
+            tmp = np.empty((self.chunkSize, 3))
             tmp[:self.split] = self.data1[self.chunkSize - self.split:]
             self.data1 = tmp
             self.pointer = self.split
             self.i = self.pointer
-        self.data1[self.i,0] = pres
+        self.data1[self.i, 0] = pres
         #self.data1[self.i,1] = vol
-        self.data1[self.i,1] = float(flow) / 1000.0
-        self.myCurve[0].setData(x=self.xAxis[:self.i+1], y=self.data1[:self.i+1,0])
-        self.myCurve[1].setData(x=self.xAxis[:self.i+1], y=self.data1[:self.i+1,1])
-        #self.myCurve[2].setData(x=self.xAxis[:self.i+1], y=self.data1[:self.i+1,2])
+        self.data1[self.i, 1] = float(flow) / 1000.0
+        self.myCurve[0].setData(
+            x=self.xAxis[:self.i + 1],
+            y=self.data1[:self.i + 1, 0],
+        )
+        self.myCurve[1].setData(
+            x=self.xAxis[:self.i + 1],
+            y=self.data1[:self.i + 1, 1]
+        )
         self.pointer += 1
         if self.pointer >= self.chunkSize:
             self.firstCycle = 0
 
     def update_values(self):
+        self.configPip.setText(str(self._config_pip))
+        self.configPeep.setText(str(self._config_peep))
+        self.configFr.setText(str(self._config_fr))
+
         self.textPip.setText(str(self._pip))
         self.textPeep.setText(str(self._peep))
-        self.textFR.setText(str(self._fr))
+        self.textFr.setText(str(self._fr))
+        self.textVol.setText(str(self._vol))
 
     def kill_recruit_timmer(self):
-        if self._recruit_timmer:
-            self._recruit_timmer.stop()
-            self._recruit_timmer.deleteLater()
-            self._recruit_timmer = None
+        if not self._recruit_timmer:
+            return
+        self._recruit_timmer.stop()
+        self._recruit_timmer.deleteLater()
+        self._recruit_timmer = None
 
     def start_recruit_timmer(self):
-        self._recruit_timmer =  QtCore.QTimer()
+        self._recruit_timmer = QtCore.QTimer()
         self._recruit_timmer.timeout.connect(self.recruit_off)
         self._recruit_timmer.setSingleShot(True)
         self._recruit_timmer.start(40000)
@@ -184,40 +201,40 @@ class MainWindow(QtWidgets.QDialog):
         self.buttonRecruit.setText(self._recruit_off_text)
 
     def buttonUpPipClicked(self):
-        if self._pip <= 79:
-            self._pip += 1
+        if self._config_pip <= 79:
+            self._config_pip += 1
         self.update_values()
-        self.serial_send('CONFIG PIP %s' % self._pip)
+        self.serial_send('CONFIG PIP %s' % self._config_pip)
 
     def buttonDownPipClicked(self):
-        if self._pip >= 1:
-            self._pip -= 1
+        if self._config_pip >= 1:
+            self._config_pip -= 1
         self.update_values()
-        self.serial_send('CONFIG PIP %s' % self._pip)
+        self.serial_send('CONFIG PIP %s' % self._config_pip)
 
     def buttonUpPeepClicked(self):
-        if self._peep < self._pip:
-            self._peep += 1
+        if self._config_peep < self._config_pip:
+            self._config_peep += 1
         self.update_values()
-        self.serial_send('CONFIG PEEP %s' % self._peep)
+        self.serial_send('CONFIG PEEP %s' % self._config_peep)
 
     def buttonDownPeepClicked(self):
-        if self._peep > 0:
-            self._peep -= 1
+        if self._config_peep > 0:
+            self._config_peep -= 1
         self.update_values()
-        self.serial_send('CONFIG PEEP %s' % self._peep)
+        self.serial_send('CONFIG PEEP %s' % self._config_peep)
 
     def buttonUpFRClicked(self):
-        if self._fr < 30:
-            self._fr += 1
+        if self._config_fr < 30:
+            self._config_fr += 1
         self.update_values()
-        self.serial_send('CONFIG BPM %s' % self._fr)
+        self.serial_send('CONFIG BPM %s' % self._config_fr)
 
     def buttonDownFRClicked(self):
-        if self._fr > 3:
-            self._fr -= 1
+        if self._config_fr > 3:
+            self._config_fr -= 1
         self.update_values()
-        self.serial_send('CONFIG BPM %s' % self._fr)
+        self.serial_send('CONFIG BPM %s' % self._config_fr)
 
     def buttonRecruitClicked(self):
         if self._recruit:
