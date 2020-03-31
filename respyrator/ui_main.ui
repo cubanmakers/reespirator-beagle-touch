@@ -431,7 +431,7 @@
    </font>
   </property>
   <property name="cursor">
-   <cursorShape>BlankCursor</cursorShape>
+   <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -811,15 +811,15 @@ color: rgb(255, 255, 255);</string>
     <widget class="QPushButton" name="buttonRecruit">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>320</y>
-       <width>151</width>
-       <height>81</height>
+       <width>181</width>
+       <height>71</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>24</pointsize>
+       <pointsize>18</pointsize>
       </font>
      </property>
      <property name="styleSheet">

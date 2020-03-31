@@ -24,8 +24,8 @@ class MainWindow(QtWidgets.QDialog):
         self._peep = 6
         self._fr = 14
         self._recruit = False
-        self._recruit_on_text = 'RECRUIT ON'
-        self._recruit_off_text = 'RECRUIT OFF'
+        self._recruit_on_text = 'STOP RECRUIT'
+        self._recruit_off_text = 'RECRUIT'
         self._recruit_timmer = None
 
         self.serial_setup()
