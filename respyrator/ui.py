@@ -3,7 +3,7 @@
 ##############################################################################
 from datetime import datetime
 from parse import *
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, uic, QtCore
 from pyqtgraph import PlotWidget, plot
 from respyrator import core, serial
 import functools
@@ -24,6 +24,9 @@ class MainWindow(QtWidgets.QDialog):
         self._peep = 6
         self._fr = 14
         self._recruit = False
+        self._recruit_on_text = 'RECRUIT ON'
+        self._recruit_off_text = 'RECRUIT OFF'
+        self._recruit_timmer = None
 
         self.serial_setup()
         uic.loadUi(core.path('ui_main.ui'), self)
@@ -36,7 +39,10 @@ class MainWindow(QtWidgets.QDialog):
         self.buttonDownPeep.clicked.connect(self.buttonDownPeepClicked)
         self.buttonUpFR.clicked.connect(self.buttonUpFRClicked)
         self.buttonDownFR.clicked.connect(self.buttonDownFRClicked)
-        # TODO create UI button "buttonRecruitClicked" and bind
+        self.buttonRecruit.clicked.connect(self.buttonRecruitClicked)
+
+        self._recruit_on_stylesheet = "background-color: red"
+        self._recruit_off_stylesheet = self.buttonRecruit.styleSheet()
 
         self.timer = pg.QtCore.QTimer()
         self.timer.timeout.connect(self.serial_read)
@@ -129,6 +135,33 @@ class MainWindow(QtWidgets.QDialog):
         self.textPeep.setText(str(self._peep))
         self.textFR.setText(str(self._fr))
 
+    def kill_recruit_timmer(self):
+        if self._recruit_timmer:
+            self._recruit_timmer.stop()
+            self._recruit_timmer.deleteLater()
+            self._recruit_timmer = None
+
+    def start_recruit_timmer(self):
+        self._recruit_timmer =  QtCore.QTimer()
+        self._recruit_timmer.timeout.connect(self.recruit_off)
+        self._recruit_timmer.setSingleShot(True)
+        self._recruit_timmer.start(40000)
+
+    def recruit_on(self):
+        self.kill_recruit_timmer()
+        self.serial_send('RECRUIT ON')
+        self._recruit = True
+        self.buttonRecruit.setStyleSheet(self._recruit_on_stylesheet)
+        self.buttonRecruit.setText(self._recruit_on_text)
+        self.start_recruit_timmer()
+
+    def recruit_off(self):
+        self.kill_recruit_timmer()
+        self.serial_send('RECRUIT OFF')
+        self._recruit = False
+        self.buttonRecruit.setStyleSheet(self._recruit_off_stylesheet)
+        self.buttonRecruit.setText(self._recruit_off_text)
+
     def buttonUpPipClicked(self):
         if self._pip <= 79:
             self._pip += 1
@@ -166,11 +199,10 @@ class MainWindow(QtWidgets.QDialog):
         self.serial_send('CONFIG BPM %s' % self._fr)
 
     def buttonRecruitClicked(self):
-        self._recruit = not self._recruit
         if self._recruit:
-            self.serial_send('RECRUIT ON')
+            self.recruit_off()
         else:
-            self.serial_send('RECRUIT OFF')
+            self.recruit_on()
 
 
 def app():
