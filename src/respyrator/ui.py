@@ -5,7 +5,7 @@ import sys
 
 import numpy as np
 import pyqtgraph as pg
-from PyQt5 import QtCore, QtWidgets, uic, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets, uic
 
 from respyrator import core, serial
 

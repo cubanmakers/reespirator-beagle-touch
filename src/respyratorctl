@@ -19,7 +19,6 @@ Options:
 import sys
 import unittest
 
-
 import respyrator
 from docopt import docopt
 
