@@ -5,8 +5,8 @@ Wants=graphical.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/reespirator_ui/
-ExecStart=/opt/reespirator_ui/respyratorctl ui
+WorkingDirectory=/root/repos/reespirator-beagle-touch/scripts/
+ExecStart=/root/repos/reespirator-beagle-touch/scripts/startUI.sh
 OOMScoreAdjust=-200
 Restart=always
 RestartSec=500ms
