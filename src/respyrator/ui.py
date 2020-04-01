@@ -5,7 +5,7 @@ import sys
 
 import numpy as np
 import pyqtgraph as pg
-from PyQt5 import QtCore, QtWidgets, uic
+from PyQt5 import QtCore, QtWidgets, uic, QtGui
 
 from respyrator import core, serial
 
@@ -61,7 +61,7 @@ class MainWindow(QtWidgets.QDialog):
 
     def show(self, *args, **kwargs):
         res = super().show()
-        self.timer.start()
+        self.timer.start(10)
         return res
 
     def serial_setup(self):
@@ -88,6 +88,7 @@ class MainWindow(QtWidgets.QDialog):
         self.serial = serial.serial_get(port)
         if not self.serial.is_open:
             raise Exception('Can\'t open serial port %s' % port)
+        self.serial.reset_input_buffer()
 
     def serial_send(self, msg):
         def no_ignore_config():
@@ -118,6 +119,7 @@ class MainWindow(QtWidgets.QDialog):
             self._config_pip = int(data[1])
             self._config_peep = int(data[2])
             self._config_fr = int(data[3])
+            self._fr = int(data[3])
             self.update()
         # frame: DT pres1 pres2 vol flow
         elif data[0] == 'DT':
@@ -171,11 +173,14 @@ class MainWindow(QtWidgets.QDialog):
         self.myCurve[0].setData(
             x=self.xAxis[:self.i + 1],
             y=self.data1[:self.i + 1, 0],
+            clear=True
         )
         self.myCurve[1].setData(
             x=self.xAxis[:self.i + 1],
-            y=self.data1[:self.i + 1, 1]
+            y=self.data1[:self.i + 1, 1],
+            clear=True
         )
+        QtGui.QApplication.processEvents()
         self.pointer += 1
         if self.pointer >= self.chunkSize:
             self.firstCycle = 0
